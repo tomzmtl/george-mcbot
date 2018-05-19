@@ -28,7 +28,7 @@ bot.on('message', (data) => {
   console.log(100, data);
 
   if (data.text === 'ping') {
-    bot.postMessageToGroup('bot-sandbox', 'pong');
+    bot.postMessageToGroup(process.env.CODE_REVIEW_CHANNEL, 'pong');
   }
 });
 
