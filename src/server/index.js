@@ -1,33 +1,39 @@
-const express = require('express');
+require('dotenv').config();
 
-const app = express();
-const path = require('path');
+const app = require('express')();
+const SlackBot = require('slackbots');
+const octokit = require('@octokit/rest')();
+
+const setupPrReminder = require('./bot/setupPrReminder');
 
 
-const PORT = process.env.PORT || 3000;
-
-const expressHandlebars = require('express-handlebars');
-// const hbsHelpers = require('./helpers/handlebars');
-const hbs = expressHandlebars.create({
-  extname: '.hbs',
-  // helpers: hbsHelpers,
+// Init Slackbot
+const bot = new SlackBot({
+  token: process.env.SLACK_BOT_TOKEN,
+  name: 'Golo Bot',
 });
 
-app.engine('.hbs', hbs.engine);
-app.set('view engine', '.hbs');
-app.set('views', path.join(__dirname, './views'));
-
-app.use('/public', express.static(path.join(__dirname, '../../dist')));
-
-app.get('/favicon.ico', (req, res) => {
-  res.status(200).set({ 'Content-Type': 'image/x-icon' }).send();
+// Init Github
+octokit.authenticate({
+  type: 'token',
+  token: process.env.GITHUB_TOKEN,
 });
 
-app.get('*', (req, res) => {
-  res.render('index');
+
+bot.on('start', () => {
+  setupPrReminder(octokit, bot);
 });
 
-app.listen(PORT, () => {
+bot.on('message', (data) => {
+  console.log(100, data);
+
+  if (data.text === 'ping') {
+    bot.postMessageToGroup('bot-sandbox', 'pong');
+  }
+});
+
+
+app.listen(3000, () => {
   // eslint-disable-next-line no-console
   console.log('Spark listening on port 3000!');
 });
