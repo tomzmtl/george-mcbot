@@ -33,6 +33,9 @@ bot.on('message', (data) => {
 });
 
 
+app.get('*', () => 'Hello');
+
+
 app.listen(3000, () => {
   // eslint-disable-next-line no-console
   console.log('Spark listening on port 3000!');
