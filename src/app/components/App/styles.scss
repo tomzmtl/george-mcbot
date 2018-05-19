@@ -1,0 +1,83 @@
+@import '../../../scss/core/variables.scss';
+
+
+@mixin paint($color) {
+  background: $color;
+
+  .App__title {
+    text-shadow: 0 1px 2px darken($color, 15);
+  }
+
+  .App__subtitle {
+    color: darken($color, 20);
+  }
+}
+
+.App {
+  @include paint(#ffb429);
+
+  display: flex;
+  height: 100vh;
+
+  &,
+  &__title,
+  &__subtitle {
+    transition: 1s linear;
+  }
+
+  &__wrapper {
+    margin: 140px auto 0;
+    width: 100%;
+  }
+
+  &__title,
+  &__subtitle {
+    margin: 0;
+    text-align: center;
+  }
+
+  &__title {
+    font-family: $cursive;
+    font-size: 76px;
+    color: white;
+  }
+
+  &__subtitle {
+    font-size: 14px;
+  }
+
+  &__github {
+    display: block;
+    margin: 50px auto 0;
+    width: 30px;
+    height: 30px;
+  }
+
+  &__github-img {
+    display: block;
+    width: inherit;
+    height: inherit;
+  }
+
+  &__links {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 12px;
+
+    .Link {
+      text-decoration: none;
+      color: #333;
+
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+  }
+
+  &--theme-0 { @include paint(#ffb429); }
+  &--theme-1 { @include paint(#a3ee38); }
+  &--theme-2 { @include paint(#38ee8e); }
+  &--theme-3 { @include paint(#38aeee); }
+  &--theme-4 { @include paint(#9226ea); }
+  &--theme-5 { @include paint(#ee386e); }
+}
