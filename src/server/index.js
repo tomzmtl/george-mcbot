@@ -33,7 +33,7 @@ bot.on('message', (data) => {
 });
 
 
-app.get('*', () => 'Hello');
+app.get('*', (req, res) => res.send('Hello'));
 
 
 app.listen(3000, () => {
