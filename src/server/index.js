@@ -4,13 +4,16 @@ const app = require('express')();
 const SlackBot = require('slackbots');
 const octokit = require('@octokit/rest')();
 
-const setupPrReminder = require('./bot/setupPrReminder');
+const prReminder = require('./bot/prReminder');
+const sickDayMessage = require('./bot/sickDayMessage');
+const pingPong = require('./bot/pingPong');
+const benderSpeech = require('./bot/benderSpeech');
 
 
 // Init Slackbot
 const bot = new SlackBot({
   token: process.env.SLACK_BOT_TOKEN,
-  name: 'George McBot',
+  name: 'Testy McTest',
 });
 
 // Init Github
@@ -21,14 +24,17 @@ octokit.authenticate({
 
 
 bot.on('start', () => {
-  setupPrReminder(octokit, bot);
+  prReminder(octokit, bot);
 });
 
 bot.on('message', (data) => {
   console.log(100, data);
-
-  if (data.text === 'ping') {
-    bot.postMessage(data.channel, 'pong');
+  if (data.type === 'message') {
+    pingPong(data, bot);
+    if (process.env.MAIN_CHANNEL_ID) {
+      benderSpeech(data, bot);
+      sickDayMessage(data, bot);
+    }
   }
 });
 

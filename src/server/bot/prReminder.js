@@ -1,4 +1,5 @@
 const schedule = require('node-schedule');
+const { CONFIG } = require('./constants');
 
 
 const prQuery = {
@@ -16,7 +17,7 @@ module.exports = (octokit, bot) => {
           `There ${prCount === 1 ? 'is' : 'are'} *${prCount} available PR${prCount === 1 ? '' : 's'}* awaiting review on the Web Client.`,
           'https://github.com/fansapp/ordering-web-app/pulls',
         ].join('\r');
-        bot.postMessage(process.env.CODE_REVIEW_CHANNEL_ID, msg);
+        bot.postMessage(process.env.CODE_REVIEW_CHANNEL_ID, msg, CONFIG);
       }
     });
   });
