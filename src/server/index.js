@@ -1,5 +1,5 @@
 require('dotenv').config();
-
+const path = require('path');
 const app = require('express')();
 const SlackBot = require('slackbots');
 const octokit = require('@octokit/rest')();
@@ -32,6 +32,9 @@ bot.on('message', (data) => {
   }
 });
 
+
+app.get('/wakemydyno.txt', (req, res) =>
+  res.sendFile(path.join(__dirname, 'static/wakemydyno.txt')));
 
 app.get('*', (req, res) => res.send('Hello'));
 
