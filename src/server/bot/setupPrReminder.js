@@ -16,7 +16,7 @@ module.exports = (octokit, bot) => {
           `There ${prCount === 1 ? 'is' : 'are'} *${prCount} available PR${prCount === 1 ? '' : 's'}* awaiting review on the Web Client.`,
           'https://github.com/fansapp/ordering-web-app/pulls',
         ].join('\r');
-        bot.postMessageToGroup(process.env.CODE_REVIEW_CHANNEL, msg);
+        bot.postMessage(process.env.CODE_REVIEW_CHANNEL_ID, msg);
       }
     });
   });

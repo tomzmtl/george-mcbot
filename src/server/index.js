@@ -10,7 +10,7 @@ const setupPrReminder = require('./bot/setupPrReminder');
 // Init Slackbot
 const bot = new SlackBot({
   token: process.env.SLACK_BOT_TOKEN,
-  name: 'Golo Bot',
+  name: 'George McBot',
 });
 
 // Init Github
@@ -28,7 +28,7 @@ bot.on('message', (data) => {
   console.log(100, data);
 
   if (data.text === 'ping') {
-    bot.postMessageToGroup(process.env.CODE_REVIEW_CHANNEL, 'pong');
+    bot.postMessage(data.channel, 'pong');
   }
 });
 
