@@ -8,14 +8,15 @@ const prQuery = {
 };
 
 module.exports = (octokit, bot) => {
-  schedule.scheduleJob('30 8 * * 1-5', () => {
+  schedule.scheduleJob('30 8 * * 1-5', () => { // be aware of server TZ
     octokit.pullRequests.getAll(prQuery).then((r) => {
-      const prCount = 1 || r.data.length;
-      if (prCount) {
+      const count = r.data.length;
+      if (count) {
         const msg = [
-          '<!channel> Good morning people! :cat:',
-          `There ${prCount === 1 ? 'is' : 'are'} *${prCount} available PR${prCount === 1 ? '' : 's'}* awaiting review on the Web Client.`,
+          '<!channel> Hey guys!',
+          `There ${count === 1 ? 'is' : 'are'} *${count} available PR${count === 1 ? '' : 's'}* awaiting review on the Web Client.`,
           'https://github.com/fansapp/ordering-web-app/pulls',
+          'I know, I know, life is cruel...'
         ].join('\r');
         bot.postMessage(process.env.CODE_REVIEW_CHANNEL_ID, msg, CONFIG);
       }
