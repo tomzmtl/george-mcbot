@@ -21,8 +21,14 @@ const makePrMsg = (pr) => {
   return msg.join('\r');
 };
 
+const recurrence = {
+  dayOfWeek: [new schedule.Range(1, 5)],
+  hour: 8,
+  minute: 30,
+};
+
 module.exports = (octokit, bot) => {
-  schedule.scheduleJob('30 8 * * 1-5', () => { // be aware of server TZ
+  schedule.scheduleJob(recurrence, () => { // be aware of server TZ
     getPendingPullRequests(octokit).then(promises => Promise.all(promises).then((pendingPrs) => {
       const prs = pendingPrs.filter(filterApprovedPrs);
       const prCount = prs.length;
