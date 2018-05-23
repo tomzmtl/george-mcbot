@@ -5,10 +5,13 @@ const SlackBot = require('slackbots');
 const octokit = require('@octokit/rest')();
 
 const prReminder = require('./bot/prReminder');
+const scrumReminder = require('./bot/scrumReminder');
 const sickDayMessage = require('./bot/sickDayMessage');
 const pingPong = require('./bot/pingPong');
 const benderSpeech = require('./bot/benderSpeech');
 
+
+const PORT = process.env.PORT || 3000;
 
 // Init Slackbot
 const bot = new SlackBot({
@@ -25,6 +28,7 @@ octokit.authenticate({
 
 bot.on('start', () => {
   prReminder(octokit, bot);
+  scrumReminder(octokit, bot);
 });
 
 bot.on('message', (data) => {
@@ -45,7 +49,7 @@ app.get('/wakemydyno.txt', (req, res) =>
 app.get('*', (req, res) => res.send('Hello'));
 
 
-app.listen(process.env.PORT || 3000, () => {
+app.listen(PORT, () => {
   // eslint-disable-next-line no-console
-  console.log('Spark listening on port 3000!');
+  console.log(`Spark listening on port ${PORT}!`);
 });
