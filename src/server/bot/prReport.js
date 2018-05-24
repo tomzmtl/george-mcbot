@@ -54,5 +54,5 @@ module.exports = (octokit, bot) =>
       bot.postToReview(msg);
       return;
     }
-    bot.postToReview('Nothing to report. Now get back to work! I got things to do.');
+    bot.postToReview('Nothing to report. Now get back to work, I got things to do.');
   }));
