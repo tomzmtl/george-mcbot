@@ -1,8 +1,6 @@
 const schedule = require('node-schedule');
-const { CONFIG } = require('./constants');
+const { random } = require('./helpers');
 
-
-const random = array => array[Math.floor(Math.random() * array.length)];
 
 const recurrence = {
   dayOfWeek: [new schedule.Range(1, 5)],
@@ -15,10 +13,10 @@ module.exports = (octokit, bot) => {
     const msg = '<!channel> '.concat(random([
       'Good morning! jk let\'s scrum :troll:',
       'Let\'s scrum now so I can get back to sleep',
-      'Let\'s scrum',
+      'Let\'s scrum!',
       'Scrum!',
-      'Scrum?',
+      'Scrum time!',
     ]));
-    bot.postMessage(process.env.MAIN_CHANNEL_ID, msg, CONFIG);
+    bot.postToTeam(msg);
   });
 };

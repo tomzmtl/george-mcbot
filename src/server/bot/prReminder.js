@@ -1,10 +1,22 @@
 const schedule = require('node-schedule');
-const { CONFIG } = require('./constants');
+const { buildMessage } = require('./helpers');
 const getPendingPullRequests = require('../github/getPendingPullRequests');
 
 
-const filterApprovedPrs = ({ reviews }) =>
-  !reviews.some(review => review.state === 'APPROVED');
+const filterPrs = ({ labels, reviews }) => {
+  // Exclude approved PRs
+  if (reviews.some(review => review.state === 'APPROVED')) {
+    return false;
+  }
+
+  // Exclude Story PRs
+  if (labels.some(label => label.name === 'Story')) {
+    return false;
+  }
+
+  return true;
+};
+
 
 const makePrMsg = (pr) => {
   let msg = [
@@ -14,11 +26,11 @@ const makePrMsg = (pr) => {
 
   if (pr.requested_reviewers.length) {
     msg = msg.concat([
-      `Reviewers: ${pr.requested_reviewers.map(user => user.login).join(' ')}`,
+      `Reviewers: ${pr.requested_reviewers.map(user => user.login).join(', ')}`,
     ]);
   }
 
-  return msg.join('\r');
+  return buildMessage(msg);
 };
 
 const recurrence = {
@@ -30,14 +42,14 @@ const recurrence = {
 module.exports = (octokit, bot) => {
   schedule.scheduleJob(recurrence, () => { // be aware of server TZ
     getPendingPullRequests(octokit).then(promises => Promise.all(promises).then((pendingPrs) => {
-      const prs = pendingPrs.filter(filterApprovedPrs);
+      const prs = pendingPrs.filter(filterPrs);
       const prCount = prs.length;
       if (prCount) {
         const msg = [
           `<!channel> There ${prCount === 1 ? 'is' : 'are'} *${prCount} pending PR${prCount === 1 ? '' : 's'}* on the Web Client:`,
           ...prs.map(pr => makePrMsg(pr)),
-        ].join('\r');
-        bot.postMessage(process.env.CODE_REVIEW_CHANNEL_ID, msg, CONFIG);
+        ];
+        bot.postToReview(msg);
       }
     }));
   });
