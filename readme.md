@@ -1,1 +1,1 @@
-# Golo Bot
+# George McBot
