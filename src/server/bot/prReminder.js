@@ -1,5 +1,6 @@
 const schedule = require('node-schedule');
 const { buildMessage } = require('./helpers');
+const { humans } = require('../../../.bot.js');
 const getPendingPullRequests = require('../github/getPendingPullRequests');
 
 
@@ -24,9 +25,18 @@ const makePrMsg = (pr) => {
     pr.html_url,
   ];
 
+  const mention = ({ id, login }) => {
+    const human = humans.find(h => h.scmId === id);
+    if (!human) {
+      return login;
+    }
+
+    return `<@${human.memberId}>`;
+  };
+
   if (pr.requested_reviewers.length) {
     msg = msg.concat([
-      `Reviewers: ${pr.requested_reviewers.map(user => user.login).join(', ')}`,
+      `Reviewers: ${pr.requested_reviewers.map(user => mention(user)).join(', ')}`,
     ]);
   }
 
@@ -46,7 +56,7 @@ module.exports = (octokit, bot) => {
       const prCount = prs.length;
       if (prCount) {
         const msg = [
-          `<!channel> There ${prCount === 1 ? 'is' : 'are'} *${prCount} pending PR${prCount === 1 ? '' : 's'}* on the Web Client:`,
+          `There ${prCount === 1 ? 'is' : 'are'} *${prCount} pending PR${prCount === 1 ? '' : 's'}* on the Web Client:`,
           ...prs.map(pr => makePrMsg(pr)),
         ];
         bot.postToReview(msg);

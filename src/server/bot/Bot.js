@@ -1,16 +1,28 @@
-const { CONFIG } = require('./constants');
 const { buildMessage } = require('./helpers');
 
 
-const bot = slackbot => ({
-  postToReview: (msg) => {
-    const message = Array.isArray(msg) ? buildMessage(msg) : msg;
-    slackbot.postMessage(process.env.CODE_REVIEW_CHANNEL_ID, message, CONFIG);
-  },
-  postToTeam: (msg) => {
-    const message = Array.isArray(msg) ? buildMessage(msg) : msg;
-    slackbot.postMessage(process.env.MAIN_CHANNEL_ID, message, CONFIG);
-  },
-});
+module.exports = (slackbot) => {
+  const config = {
+    as_user: process.env.AS_USER === 'true',
+  };
 
-module.exports = bot;
+  const postMessage = (channel, msg) => {
+    const message = Array.isArray(msg) ? buildMessage(msg) : msg;
+    slackbot.postMessage(channel, message, config);
+  };
+
+  const postTo = (channel, msg) => postMessage(channel, msg);
+  const type = channel => slackbot.ws.send(JSON.stringify({ type: 'typing', channel }));
+
+  return {
+    postToReview: msg => postMessage(process.env.CODE_REVIEW_CHANNEL_ID, msg),
+    postToTeam: msg => postMessage(process.env.TEAM_CHANNEL_ID, msg),
+    postToSandbox: msg => postMessage(process.env.SANDBOX_CHANNEL_ID, msg),
+    postTo,
+    type,
+    typeAndPost: (channel, msg) => {
+      type(channel);
+      setTimeout(() => postTo(channel, msg), 1000);
+    },
+  };
+};

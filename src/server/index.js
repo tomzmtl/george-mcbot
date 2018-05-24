@@ -9,9 +9,7 @@ const octokit = require('@octokit/rest')();
 const Bot = require('./bot/Bot');
 const prReminder = require('./bot/prReminder');
 const scrumReminder = require('./bot/scrumReminder');
-const sickDayMessage = require('./bot/sickDayMessage');
-const pingPong = require('./bot/pingPong');
-const benderSpeech = require('./bot/benderSpeech');
+const handleMessage = require('./bot/handleMessage');
 
 
 const PORT = process.env.PORT || 3000;
@@ -43,14 +41,8 @@ slackbot.on('start', () => {
 });
 
 slackbot.on('message', (data) => {
-  // console.log(100, data);
-  if (data.type === 'message') {
-    pingPong(data, slackbot);
-    if (process.env.MAIN_CHANNEL_ID) {
-      benderSpeech(data, slackbot);
-      sickDayMessage(data, slackbot);
-    }
-  }
+  console.log(200, data);
+  handleMessage(data, bot);
 });
 
 
