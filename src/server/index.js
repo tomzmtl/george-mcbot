@@ -42,7 +42,7 @@ slackbot.on('start', () => {
 
 slackbot.on('message', (data) => {
   console.log(200, data);
-  handleMessage(data, bot);
+  handleMessage(data, bot, octokit);
 });
 
 

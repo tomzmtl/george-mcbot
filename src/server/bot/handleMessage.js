@@ -1,8 +1,9 @@
 const benderSpeech = require('./benderSpeech');
+const prReport = require('./prReport');
 const { isSickDayMessage } = require('./helpers');
 
 
-module.exports = (data, bot) => {
+module.exports = (data, bot, octokit) => {
   if (data.type === 'hello') {
     return bot.postToSandbox('`ready.to.kill.all.humans!`');
   }
@@ -15,6 +16,13 @@ module.exports = (data, bot) => {
     if (data.text === 'type') {
       return bot.typeAndPost(data.channel, 'typed');
     }
+
+    if (process.env.CODE_REVIEW_CHANNEL_ID) {
+      if (data.text === 'report') {
+        return prReport(octokit, bot);
+      }
+    }
+
 
     if (process.env.TEAM_CHANNEL_ID) {
       if (isSickDayMessage(data.text)) {
