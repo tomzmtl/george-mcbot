@@ -1,6 +1,7 @@
 require('dotenv').config();
 const path = require('path');
 const app = require('express')();
+const bodyParser = require('body-parser');
 const AirbrakeClient = require('airbrake-js');
 const makeErrorHandler = require('airbrake-js/dist/instrumentation/express');
 const SlackBot = require('slackbots');
@@ -57,16 +58,22 @@ slackbot.on('message', (data) => {
   }
 
   if (data.type === 'message') {
-    if (data.text.length < 280) {
+    if (data.text.length < 256) {
       wit.message(data.text);
     }
     handleMessage(data, bot, octokit);
   }
 });
 
+app.use(bodyParser.json());
 
 app.get('/wakemydyno.txt', (req, res) =>
   res.sendFile(path.join(__dirname, 'static/wakemydyno.txt')));
+
+app.post('/hooks', (req, res) => {
+  console.log(111, JSON.stringify(req.body, null, 2));
+  res.send();
+});
 
 app.get('*', (req, res) => res.send('Hello'));
 
