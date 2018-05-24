@@ -1,6 +1,8 @@
 require('dotenv').config();
 const path = require('path');
 const app = require('express')();
+const AirbrakeClient = require('airbrake-js');
+const makeErrorHandler = require('airbrake-js/dist/instrumentation/express');
 const SlackBot = require('slackbots');
 const octokit = require('@octokit/rest')();
 
@@ -28,6 +30,12 @@ octokit.authenticate({
   token: process.env.GITHUB_TOKEN,
 });
 
+// Init Airbrake
+const airbrake = new AirbrakeClient({
+  projectId: process.env.AIRBRAKE_PROJECT_ID,
+  projectKey: process.env.AIRBRAKE_API_KEY,
+});
+
 
 slackbot.on('start', () => {
   prReminder(octokit, bot);
@@ -51,6 +59,7 @@ app.get('/wakemydyno.txt', (req, res) =>
 
 app.get('*', (req, res) => res.send('Hello'));
 
+app.use(makeErrorHandler(airbrake));
 
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console
