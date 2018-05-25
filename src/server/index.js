@@ -48,7 +48,7 @@ slackbot.on('start', () => {
 });
 
 slackbot.on('message', (data) => {
-  if (!bot.memberId === data.user) {
+  if ([bot.memberId, 'USLACKBOT'].includes(data.user)) {
     return;
   }
 
