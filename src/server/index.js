@@ -53,7 +53,7 @@ slackbot.on('message', (data) => {
   }
 
   if (data.type === 'hello') {
-    bot.postToSandbox('`ready.to.kill.all.humans!`');
+    bot.postToSandbox('`ready.to.kill.all.humans`');
     return;
   }
 
@@ -73,7 +73,17 @@ app.get('/wakemydyno.txt', (req, res) =>
   res.sendFile(path.join(__dirname, 'static/wakemydyno.txt')));
 
 app.post('/hooks', (req, res) => {
-  console.log(111, JSON.stringify(req.body, null, 2));
+  const { body } = req;
+  const pr = body.pull_request;
+
+  if (body.action === 'opened' && pr) {
+    bot.postToReview([
+      `[${pr.head.repo.name}] New PR opened by ${pr.user.login}:`,
+      `*${pr.user.title}*`,
+      `${pr.html_url}`,
+    ]);
+  }
+
   res.send();
 });
 
