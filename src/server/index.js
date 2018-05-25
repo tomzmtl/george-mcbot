@@ -58,10 +58,12 @@ slackbot.on('message', (data) => {
   }
 
   if (data.type === 'message') {
-    if (data.text.length < 256) {
-      wit.message(data.text);
+    if (data.text) {
+      if (data.text.length < 256 && data.text.length > 0) {
+        wit.message(data.text);
+      }
+      handleMessage(data, bot, octokit);
     }
-    handleMessage(data, bot, octokit);
   }
 });
 
