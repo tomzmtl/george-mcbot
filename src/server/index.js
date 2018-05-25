@@ -79,8 +79,7 @@ app.post('/hooks', (req, res) => {
   if (body.action === 'opened' && pr) {
     bot.postToReview([
       `[${pr.head.repo.name}] New PR opened by ${pr.user.login}:`,
-      `*${pr.user.title}*`,
-      `${pr.html_url}`,
+      `*<${pr.html_url}|${pr.title}>*`,
     ]);
   }
 
