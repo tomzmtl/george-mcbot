@@ -12,6 +12,7 @@ const Bot = require('./bot/Bot');
 const prReminder = require('./bot/prReminder');
 const scrumReminder = require('./bot/scrumReminder');
 const handleMessage = require('./bot/handleMessage');
+const formatPr = require('./scm/formatPr');
 
 
 const PORT = process.env.PORT || 3000;
@@ -77,10 +78,7 @@ app.post('/hooks', (req, res) => {
   const pr = body.pull_request;
 
   if (body.action === 'opened' && pr) {
-    bot.postToReview([
-      `[${pr.head.repo.name}] New PR opened by ${pr.user.login}:`,
-      `*<${pr.html_url}|${pr.title}>*`,
-    ]);
+    bot.postToReview(formatPr(pr));
   }
 
   res.send();

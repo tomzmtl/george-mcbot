@@ -1,9 +1,8 @@
-const { buildMessage } = require('./helpers');
-const { humans } = require('../../../.bot.js');
 const getPendingPullRequests = require('../github/getPendingPullRequests');
+const formatPr = require('../scm/formatPr');
 
 
-const filterPrs = ({ labels, reviews }) => {
+const filterPending = ({ labels, reviews }) => {
   // Exclude approved PRs
   if (reviews.some(review => review.state === 'APPROVED')) {
     return false;
@@ -17,42 +16,33 @@ const filterPrs = ({ labels, reviews }) => {
   return true;
 };
 
-
-const makePrMsg = (pr) => {
-  let msg = [
-    `>>> *${pr.title}*`,
-    pr.html_url,
-  ];
-
-  const mention = ({ id, login }) => {
-    const human = humans.find(h => h.scmId === id);
-    if (!human) {
-      return login;
-    }
-
-    return `<@${human.memberId}>`;
-  };
-
-  if (pr.requested_reviewers.length) {
-    msg = msg.concat([
-      `Reviewers: ${pr.requested_reviewers.map(user => mention(user)).join(', ')}`,
-    ]);
-  }
-
-  return buildMessage(msg);
-};
+const filterApproved = ({ reviews }) =>
+  reviews.some(review => review.state === 'APPROVED');
 
 module.exports = (octokit, bot) =>
-  getPendingPullRequests(octokit).then(promises => Promise.all(promises).then((pendingPrs) => {
-    const prs = pendingPrs.filter(filterPrs);
-    const prCount = prs.length;
-    if (prCount) {
-      const msg = [
-        `There ${prCount === 1 ? 'is' : 'are'} *${prCount} pending PR${prCount === 1 ? '' : 's'}* on the Web Client:`,
-        ...prs.map(pr => makePrMsg(pr)),
-      ];
-      bot.postToReview(msg);
-      return;
+  getPendingPullRequests(octokit).then(promises => Promise.all(promises).then((prs) => {
+    let msg = [];
+
+    const pending = prs.filter(filterPending);
+    const pendingCount = pending.length;
+    if (pendingCount) {
+      msg = msg.concat([
+        `*${pendingCount} pending PR${pendingCount === 1 ? '' : 's'}* that need review:`,
+        ...pending.map(pr => formatPr(pr, { reviewers: true })),
+      ]);
     }
-    bot.postToReview('Nothing to report. Now get back to work, I got things to do.');
+
+    const approved = prs.filter(filterApproved);
+    const approvedCount = approved.length;
+    if (approvedCount) {
+      msg = msg.concat([
+        `*${approvedCount} approved PR${approvedCount === 1 ? '' : 's'}* awaiting merge:`,
+        ...approved.map(pr => formatPr(pr)),
+      ]);
+    }
+
+    if (msg.length) {
+      bot.postToReview(msg);
+    }
+    // bot.postToReview('Nothing to report. Now get back to work, I got things to do.');
   }));
