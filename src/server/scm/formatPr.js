@@ -12,10 +12,15 @@ const mention = ({ id, login }) => {
 };
 
 module.exports = (pr, options = {}) => {
-  let msg = [
-    `>>> [${pr.head.repo.name}]`,
-    `*<${pr.html_url}|${pr.title}>*`,
-  ];
+  let msg = [];
+
+  const basePrefix = `>>> [${pr.head.repo.name}]`;
+
+  if (options.prefix) {
+    msg = msg.concat(options.prefix ? `${basePrefix} ${options.prefix}` : basePrefix);
+  }
+
+  msg = msg.concat(`*<${pr.html_url}|${pr.title}>*`);
 
   if (options.reviewers && pr.requested_reviewers.length) {
     msg = msg.concat([

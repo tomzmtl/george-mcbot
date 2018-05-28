@@ -78,7 +78,7 @@ app.post('/hooks', (req, res) => {
   const pr = body.pull_request;
 
   if (body.action === 'opened' && pr) {
-    bot.postToReview(formatPr(pr));
+    bot.postToReview(formatPr(pr, { prefix: 'New PR:' }));
   }
 
   res.send();
