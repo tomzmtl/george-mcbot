@@ -3,8 +3,9 @@ const { buildMessage } = require('../helpers');
 
 
 class Bot {
-  constructor(bot, middlewares) {
+  constructor(bot, octokit, middlewares) {
     this.bot = bot;
+    this.octokit = octokit;
     this.middlewares = middlewares;
     this.config = {
       as_user: process.env.AS_USER === 'true',
