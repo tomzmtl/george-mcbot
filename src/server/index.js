@@ -41,6 +41,7 @@ const airbrake = new AirbrakeClient({
 const bot = Bot(slackbot);
 
 const George = new Robot(slackbot, octokit, [
+  mw.hello,
   mw.prReport,
   mw.wit,
   mw.sickDay,
@@ -56,11 +57,6 @@ slackbot.on('start', () => {
 
 slackbot.on('message', (data) => {
   if ([bot.memberId, 'USLACKBOT'].includes(data.user)) {
-    return;
-  }
-
-  if (data.type === 'hello') {
-    bot.postToSandbox('`ready.to.kill.all.humans`');
     return;
   }
 
