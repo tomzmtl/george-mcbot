@@ -6,7 +6,6 @@ const AirbrakeClient = require('airbrake-js');
 const makeErrorHandler = require('airbrake-js/dist/instrumentation/express');
 const SlackBot = require('slackbots');
 const octokit = require('@octokit/rest')();
-const { Wit } = require('node-wit');
 const reqDir = require('require-dir');
 
 const Bot = require('./bot/Bot');
@@ -38,17 +37,12 @@ const airbrake = new AirbrakeClient({
   projectKey: process.env.AIRBRAKE_API_KEY,
 });
 
-// Init Wit
-const wit = new Wit({
-  accessToken: process.env.WIT_TOKEN,
-});
-
-
 // Init GeorgeMcBot
 const bot = Bot(slackbot);
 
 const George = new Robot(slackbot, octokit, [
   mw.prReport,
+  mw.wit,
   mw.sickDay,
   mw.pingPong,
   mw.benderSpeech,
@@ -68,14 +62,6 @@ slackbot.on('message', (data) => {
   if (data.type === 'hello') {
     bot.postToSandbox('`ready.to.kill.all.humans`');
     return;
-  }
-
-  if (data.type === 'message') {
-    if (data.text) {
-      if (data.text.length < 256 && data.text.length > 0) {
-        wit.message(data.text);
-      }
-    }
   }
 
   George.start(data);
