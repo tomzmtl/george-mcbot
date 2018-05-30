@@ -13,7 +13,6 @@ const Bot = require('./bot/Bot');
 const Robot = require('./bot/core/Bot');
 const prReminder = require('./bot/prReminder');
 const scrumReminder = require('./bot/scrumReminder');
-const handleMessage = require('./bot/handleMessage');
 const formatPr = require('./scm/formatPr');
 
 const mw = reqDir('./bot/middlewares');
@@ -51,6 +50,7 @@ const bot = Bot(slackbot);
 const George = new Robot(slackbot, octokit, [
   mw.prReport,
   mw.sickDay,
+  mw.pingPong,
   mw.benderSpeech,
 ]);
 
@@ -75,7 +75,6 @@ slackbot.on('message', (data) => {
       if (data.text.length < 256 && data.text.length > 0) {
         wit.message(data.text);
       }
-      handleMessage(data, bot, octokit);
     }
   }
 
