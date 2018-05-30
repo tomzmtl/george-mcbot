@@ -20,7 +20,7 @@ const filterApproved = ({ reviews }) =>
   reviews.some(review => review.state === 'APPROVED');
 
 module.exports = (octokit, bot) =>
-  getPendingPullRequests(octokit).then(promises => Promise.all(promises).then((prs) => {
+  getPendingPullRequests(octokit).then((prs) => {
     let msg = [];
 
     const pending = prs.filter(filterPending);
@@ -45,4 +45,4 @@ module.exports = (octokit, bot) =>
       bot.postToReview(msg);
     }
     // bot.postToReview('Nothing to report. Now get back to work, I got things to do.');
-  }));
+  });
