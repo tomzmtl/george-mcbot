@@ -22,8 +22,16 @@ class Bot {
   }
 
   start(data) {
+    let stopped = false;
+
+    const stop = () => { stopped = true; };
+
     for (let i = 0; i < this.middlewares.length; i += 1) {
-      this.middlewares[i](this, data);
+      if (stopped) {
+        return;
+      }
+
+      this.middlewares[i](this, data, stop);
     }
   }
 

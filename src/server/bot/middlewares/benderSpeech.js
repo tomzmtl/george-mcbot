@@ -1,4 +1,4 @@
-module.exports = (bot, data) => {
+module.exports = (bot, data, stop) => {
   if (data.type !== 'message') {
     return;
   }
@@ -7,6 +7,7 @@ module.exports = (bot, data) => {
     if (data.text.toLowerCase().includes('congrats people')) {
       const msg = 'Oh my god. I\'m so excited I wish I could wet my pants!';
       bot.postMessage(data.channel, msg);
+      stop();
     }
   }
 };
