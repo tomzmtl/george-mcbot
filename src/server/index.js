@@ -27,15 +27,7 @@ const slackbot = new SlackBot({
   name: 'Testy McTest',
 });
 
-const bot = Bot(slackbot);
-
-const George = new Robot(slackbot, octokit, [
-  mw.prReport,
-  mw.sickDay,
-  mw.benderSpeech,
-]);
-
-// Init Github
+// Init Octokit
 octokit.authenticate({
   type: 'token',
   token: process.env.GITHUB_TOKEN,
@@ -51,6 +43,16 @@ const airbrake = new AirbrakeClient({
 const wit = new Wit({
   accessToken: process.env.WIT_TOKEN,
 });
+
+
+// Init GeorgeMcBot
+const bot = Bot(slackbot);
+
+const George = new Robot(slackbot, octokit, [
+  mw.prReport,
+  mw.sickDay,
+  mw.benderSpeech,
+]);
 
 
 slackbot.on('start', () => {
