@@ -7,12 +7,16 @@ const makeErrorHandler = require('airbrake-js/dist/instrumentation/express');
 const SlackBot = require('slackbots');
 const octokit = require('@octokit/rest')();
 const { Wit } = require('node-wit');
+const reqDir = require('require-dir');
 
 const Bot = require('./bot/Bot');
+const Robot = require('./bot/core/Bot');
 const prReminder = require('./bot/prReminder');
 const scrumReminder = require('./bot/scrumReminder');
 const handleMessage = require('./bot/handleMessage');
 const formatPr = require('./scm/formatPr');
+
+const mw = reqDir('./bot/middlewares');
 
 
 const PORT = process.env.PORT || 3000;
@@ -24,6 +28,10 @@ const slackbot = new SlackBot({
 });
 
 const bot = Bot(slackbot);
+
+const George = new Robot(slackbot, [
+  mw.benderSpeech,
+]);
 
 // Init Github
 octokit.authenticate({
@@ -66,6 +74,8 @@ slackbot.on('message', (data) => {
       handleMessage(data, bot, octokit);
     }
   }
+
+  George.start(data);
 });
 
 app.use(bodyParser.json());
