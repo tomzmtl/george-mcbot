@@ -30,6 +30,7 @@ const slackbot = new SlackBot({
 const bot = Bot(slackbot);
 
 const George = new Robot(slackbot, octokit, [
+  mw.prReport,
   mw.sickDay,
   mw.benderSpeech,
 ]);
