@@ -8,8 +8,7 @@ const SlackBot = require('slackbots');
 const octokit = require('@octokit/rest')();
 const reqDir = require('require-dir');
 
-const Bot = require('./bot/Bot');
-const Robot = require('./bot/core/Bot');
+const Bot = require('./bot/core/Bot');
 const prReminder = require('./bot/prReminder');
 const scrumReminder = require('./bot/scrumReminder');
 const formatPr = require('./scm/formatPr');
@@ -38,9 +37,8 @@ const airbrake = new AirbrakeClient({
 });
 
 // Init GeorgeMcBot
-const bot = Bot(slackbot);
-
-const George = new Robot(slackbot, octokit, [
+const bot = new Bot(slackbot, octokit, [
+  mw.guard,
   mw.hello,
   mw.prReport,
   mw.wit,
@@ -56,11 +54,7 @@ slackbot.on('start', () => {
 });
 
 slackbot.on('message', (data) => {
-  if ([bot.memberId, 'USLACKBOT'].includes(data.user)) {
-    return;
-  }
-
-  George.start(data);
+  bot.start(data);
 });
 
 app.use(bodyParser.json());
