@@ -17,7 +17,7 @@ module.exports = (pr, options = {}) => {
   const basePrefix = `>>> [${pr.head.repo.name}]`;
 
   if (options.prefix) {
-    msg = msg.concat(options.prefix ? `${basePrefix} ${options.prefix}` : basePrefix);
+    msg = msg.concat(options.prefix ? `${basePrefix} ${options.prefix(pr)}` : basePrefix);
   }
 
   msg = msg.concat(`*<${pr.html_url}|${pr.title}>*`);
