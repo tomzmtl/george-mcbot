@@ -2,8 +2,8 @@ const { humans } = require('../../../.bot.js');
 const { buildMessage } = require('../bot/helpers');
 
 
-const mention = ({ id, login }) => {
-  const human = humans.find(h => h.scmId === id);
+const mention = (login) => {
+  const human = humans.find(h => h.scmId === login);
   if (!human) {
     return login;
   }
@@ -11,22 +11,45 @@ const mention = ({ id, login }) => {
   return `<@${human.memberId}>`;
 };
 
-module.exports = (pr, options = {}) => {
-  let msg = [];
-
-  const basePrefix = `>>> [${pr.head.repo.name}]`;
-
-  if (options.prefix) {
-    msg = msg.concat(options.prefix ? `${basePrefix} ${options.prefix(pr)}` : basePrefix);
+const renderIcon = (pr, meta) => {
+  if (meta.rejected) {
+    return ':poop:';
   }
 
-  msg = msg.concat(`*<${pr.html_url}|${pr.title}>*`);
-
-  if (options.reviewers && pr.requested_reviewers.length) {
-    msg = msg.concat([
-      `Reviewers: ${pr.requested_reviewers.map(user => mention(user)).join(', ')}`,
-    ]);
+  if (meta.approved || meta.story) {
+    return ':thumbsup:';
   }
+
+  return ':package:';
+};
+
+const renderCollaborators = (pr, meta) => {
+  if (meta.pending && !meta.story) {
+    return `Reviewers: ${pr.requested_reviewers.map(user => mention(user.login)).join(', ')}`;
+  }
+
+  if (meta.approved || meta.story) {
+    return `Owner: ${mention(pr.user.login)}`;
+  }
+
+  return null;
+};
+
+module.exports = (pr) => {
+  const approved = pr.reviews.some(review => review.state === 'APPROVED');
+  const rejected = pr.reviews.some(review => review.state === 'REQUEST_CHANGES');
+
+  const meta = {
+    approved,
+    pending: !approved && !rejected,
+    rejected,
+    story: pr.labels.some(label => label.name === 'Story'),
+  };
+
+  const msg = [
+    `${renderIcon(pr, meta)} *<${pr.html_url}|${pr.title}>*`,
+    renderCollaborators(pr, meta),
+  ];
 
   return buildMessage(msg);
 };

@@ -6,17 +6,17 @@ module.exports = {
     {
       name: 'Wei',
       memberId: 'U3E97PNUE',
-      scmId: 3420457,
+      scmId: 'WeiToGo',
     },
     {
       name: 'Thomas',
       memberId: 'U2KJRP8QN',
-      scmId: '',
+      scmId: 'tomzmtl',
     },
     {
       name: 'JF',
       memberId: 'U1RFGPG20',
-      scmId: 16083797,
+      scmId: 'jfg-fans',
     },
     {
       name: 'Mike',
