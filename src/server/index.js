@@ -12,6 +12,7 @@ const Bot = require('./bot/core/Bot');
 const prReminder = require('./bot/prReminder');
 const scrumReminder = require('./bot/scrumReminder');
 const formatPr = require('./scm/formatPr');
+const getReviews = require('./github/getReviews');
 
 const mw = reqDir('./bot/middlewares');
 
@@ -67,7 +68,9 @@ app.post('/hooks', (req, res) => {
   const pr = body.pull_request;
 
   if (body.action === 'opened' && pr) {
-    bot.postToReview(formatPr(pr, { prefix: prData => `New PR opened by ${prData.user.login}:` }));
+    getReviews(pr, octokit).then((fullPr) => {
+      bot.postToReview(formatPr(fullPr, { prefix: data => `New PR opened by ${data.user.login}:` }));
+    });
   }
 
   res.send();

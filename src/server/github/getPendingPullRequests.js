@@ -1,25 +1,13 @@
-const getPendingPullRequests = async (octokit) => {
-  const getReviews = number => octokit.pullRequests.getReviews({
-    owner: 'fansapp',
-    repo: 'ordering-web-app',
-    number,
-  });
+const getReviews = require('./getReviews');
 
+
+module.exports = async (octokit) => {
   const { data: prs } = await octokit.pullRequests.getAll({
     owner: 'fansapp',
     repo: 'ordering-web-app',
   });
 
-  const calls = prs.map(async (pr) => {
-    const { data: reviews } = await getReviews(pr.number);
-    return {
-      ...pr,
-      reviews,
-    };
-  });
+  const calls = prs.map(async pr => getReviews(pr, octokit));
 
   return Promise.all(calls);
 };
-
-
-module.exports = getPendingPullRequests;
