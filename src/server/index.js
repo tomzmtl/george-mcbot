@@ -67,6 +67,8 @@ app.post('/hooks', (req, res) => {
   const { body } = req;
   const pr = body.pull_request;
 
+  console.log('INCOMING GITHUB WEBHOOK', body.action);
+
   if (body.action === 'opened' && pr) {
     getReviews(pr, octokit).then((fullPr) => {
       bot.postToReview(formatPr(fullPr, { prefix: data => `New PR opened by ${data.user.login}:` }));
