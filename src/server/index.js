@@ -7,10 +7,12 @@ const makeErrorHandler = require('airbrake-js/dist/instrumentation/express');
 const SlackBot = require('slackbots');
 const octokit = require('@octokit/rest')();
 const reqDir = require('require-dir');
+const mongoose = require('mongoose');
 
 const Bot = require('./bot/core/Bot');
 const prReminder = require('./bot/prReminder');
 const scrumReminder = require('./bot/scrumReminder');
+const initReport = require('./bot/initReport');
 const formatPr = require('./scm/formatPr');
 const getReviews = require('./github/getReviews');
 
@@ -30,6 +32,9 @@ octokit.authenticate({
   type: 'token',
   token: process.env.GITHUB_TOKEN,
 });
+
+// Init mongoose
+mongoose.connect(process.env.MONGODB_URI);
 
 // Init Airbrake
 const airbrake = new AirbrakeClient({
@@ -52,6 +57,7 @@ const bot = new Bot(slackbot, octokit, [
 slackbot.on('start', () => {
   prReminder(octokit, bot);
   scrumReminder(octokit, bot);
+  initReport(bot);
 });
 
 slackbot.on('message', (data) => {
@@ -67,6 +73,7 @@ app.post('/hooks', (req, res) => {
   const { body } = req;
   const pr = body.pull_request;
 
+  // eslint-disable-next-line no-console
   console.log('INCOMING GITHUB WEBHOOK', body.action);
 
   if (body.action === 'opened' && pr) {
