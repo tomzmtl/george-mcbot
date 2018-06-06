@@ -4,6 +4,7 @@ const schedule = require('node-schedule');
 const recurrence = {
   dayOfWeek: [new schedule.Range(1, 5)],
   hour: 7,
+  minute: 0,
 };
 
 const Report = mongoose.model('Report', {
