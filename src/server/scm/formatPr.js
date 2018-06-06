@@ -24,7 +24,7 @@ const renderIcon = (pr, meta) => {
 };
 
 const renderCollaborators = (pr, meta) => {
-  if (meta.pending && !meta.story) {
+  if (pr.requested_reviewers.length && meta.pending && !meta.story) {
     return `Reviewers: ${pr.requested_reviewers.map(user => mention(user.login)).join(', ')}`;
   }
 
