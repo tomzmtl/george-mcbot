@@ -24,30 +24,30 @@ const renderIcon = (pr, meta) => {
 };
 
 const renderCollaborators = (pr, meta) => {
-  if (pr.requested_reviewers.length && meta.pending && !meta.story) {
-    return `Reviewers: ${pr.requested_reviewers.map(user => mention(user.login)).join(', ')}`;
+  if (pr.reviewers.length && meta.pending && !meta.story) {
+    return `Reviewers: ${pr.reviewers.map(user => mention(user.username)).join(', ')}`;
   }
 
   if (meta.approved || meta.story) {
-    return `Owner: ${mention(pr.user.login)}`;
+    return `Owner: ${mention(pr.author.username)}`;
   }
 
   return null;
 };
 
 module.exports = (pr) => {
-  const approved = pr.reviews.some(review => review.state === 'APPROVED');
-  const rejected = pr.reviews.some(review => review.state === 'REQUEST_CHANGES');
+  const approved = pr.participants.some(user => user.approved);
+  const rejected = false; // TODO: wait for bitbucket to allow "request changes" status
 
   const meta = {
     approved,
     pending: !approved && !rejected,
     rejected,
-    story: pr.labels.some(label => label.name === 'Story'),
+    story: false, // TODO: wait for bitbucket to allow labels :facepalm:
   };
 
   const msg = [
-    `${renderIcon(pr, meta)} *<${pr.html_url}|${pr.title}>*`,
+    `${renderIcon(pr, meta)} *<${pr.links.html.href}|${pr.title}>*`,
     renderCollaborators(pr, meta),
   ];
 

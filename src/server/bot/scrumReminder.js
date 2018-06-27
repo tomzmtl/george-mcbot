@@ -8,7 +8,7 @@ const recurrence = {
   minute: 30,
 };
 
-module.exports = (octokit, bot) => {
+module.exports = (bbkit, bot) => {
   schedule.scheduleJob(recurrence, () => { // be aware of server TZ
     const msg = '<!channel> '.concat(random([
       'Good morning! jk let\'s scrum :troll:',

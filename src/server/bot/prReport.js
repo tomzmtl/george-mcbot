@@ -1,9 +1,9 @@
-const getPendingPullRequests = require('../github/getPendingPullRequests');
+const getPendingPullRequests = require('../scm/getPendingPullRequests');
 const formatPr = require('../scm/formatPr');
 
 
-module.exports = (octokit, bot) =>
-  getPendingPullRequests(octokit).then((prs) => {
+module.exports = (bbkit, bot) =>
+  getPendingPullRequests(bbkit).then((prs) => {
     prs.forEach((pr) => {
       bot.postToReview(formatPr(pr));
     });

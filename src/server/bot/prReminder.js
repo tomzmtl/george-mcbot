@@ -8,8 +8,8 @@ const recurrence = {
   minute: 30,
 };
 
-module.exports = (octokit, bot) => {
+module.exports = (bbkit, bot) => {
   schedule.scheduleJob(recurrence, () => { // be aware of server TZ
-    prReport(octokit, bot);
+    prReport(bbkit, bot);
   });
 };
