@@ -3,8 +3,5 @@ const formatPr = require('../scm/formatPr');
 
 
 module.exports = (bbkit, bot) =>
-  getPendingPullRequests(bbkit).then((prs) => {
-    prs.forEach((pr) => {
-      bot.postToReview(formatPr(pr));
-    });
-  });
+  getPendingPullRequests(bbkit).then(prs =>
+    Promise.all(prs.map(pr => bot.postToReview(formatPr(pr)))));

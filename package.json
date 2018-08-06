@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "nodemon src/server",
     "lint": "eslint src/app/**/*.js",
+    "reminder:prs": "node src/server/scripts/prReport.js",
     "start": "node src/server",
     "test": "mocha --opts mocha.opts --harmony || true",
     "test:ci": "mocha --opts mocha.travis.opts --harmony"

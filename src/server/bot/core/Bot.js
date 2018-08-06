@@ -15,7 +15,7 @@ class Bot {
 
   postMessage(channel, msg) {
     const message = Array.isArray(msg) ? buildMessage(msg) : msg;
-    this.bot.postMessage(channel, message, this.config);
+    return this.bot.postMessage(channel, message, this.config);
   }
 
   type(channel) {
@@ -37,7 +37,7 @@ class Bot {
   }
 
   postToReview(msg) {
-    this.postMessage(process.env.CODE_REVIEW_CHANNEL_ID, msg);
+    return this.postMessage(process.env.CODE_REVIEW_CHANNEL_ID, msg);
   }
 
   postToTeam(msg) {

@@ -10,9 +10,8 @@ const mongoose = require('mongoose');
 
 const bbkit = require('./bbkit');
 const Bot = require('./bot/core/Bot');
-const prReminder = require('./bot/prReminder');
-const scrumReminder = require('./bot/scrumReminder');
-const initReport = require('./bot/initReport');
+// const reminders = require('./bot/reminders');
+// const initReport = require('./bot/initReport');
 const formatPr = require('./scm/formatPr');
 const getFullPr = require('./scm/getFullPr');
 
@@ -48,11 +47,9 @@ const bot = new Bot(slackbot, bbkit, [
 ]);
 
 
-slackbot.on('start', () => {
-  prReminder(bbkit, bot);
-  scrumReminder(bbkit, bot);
-  initReport(bot);
-});
+// slackbot.on('start', () => {
+//   initReport(bot);
+// });
 
 slackbot.on('message', (data) => {
   bot.start(data);
