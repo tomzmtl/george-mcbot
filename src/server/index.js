@@ -1,6 +1,5 @@
 require('dotenv').config();
 require('isomorphic-fetch');
-const path = require('path');
 const app = require('express')();
 const bodyParser = require('body-parser');
 const AirbrakeClient = require('airbrake-js');
@@ -60,9 +59,6 @@ slackbot.on('message', (data) => {
 });
 
 app.use(bodyParser.json());
-
-app.get('/wakemydyno.txt', (req, res) =>
-  res.sendFile(path.join(__dirname, 'static/wakemydyno.txt')));
 
 app.post('/hooks', (req, res) => {
   const { body } = req;
