@@ -40,7 +40,6 @@ const bot = new Bot(slackbot, bbkit, [
   mw.guard,
   mw.hello,
   mw.prReport,
-  mw.wit,
   mw.sickDay,
   mw.pingPong,
   mw.benderSpeech,
