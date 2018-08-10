@@ -18,9 +18,5 @@ module.exports = {
       memberId: 'U1RFGPG20',
       scmId: 'jfg-golo',
     },
-    {
-      name: 'Mike',
-      memberId: 'U1X3H0N7L',
-    },
   ],
 };
