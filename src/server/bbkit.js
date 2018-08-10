@@ -9,6 +9,7 @@ const bbClient = restClient({
 module.exports = {
   pullRequests: {
     get: id => bbClient.get(`https://api.bitbucket.org/2.0/repositories/goloinc/ordering-web-app/pullrequests/${id}`),
-    getAll: () => bbClient.get('https://api.bitbucket.org/2.0/repositories/goloinc/ordering-web-app/pullrequests'),
+    getAll: repo =>
+      bbClient.get(`https://api.bitbucket.org/2.0/repositories/goloinc/${repo}/pullrequests`),
   },
 };
