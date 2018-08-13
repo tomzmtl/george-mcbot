@@ -10,6 +10,6 @@ module.exports = {
   pullRequests: {
     get: id => bbClient.get(`https://api.bitbucket.org/2.0/repositories/goloinc/ordering-web-app/pullrequests/${id}`),
     getAll: repo =>
-      bbClient.get(`https://api.bitbucket.org/2.0/repositories/goloinc/${repo}/pullrequests`),
+      bbClient.get(`https://api.bitbucket.org/2.0/repositories/goloinc/${repo}/pullrequests?q=state="OPEN"`),
   },
 };

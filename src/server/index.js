@@ -10,8 +10,6 @@ const mongoose = require('mongoose');
 
 const bbkit = require('./bbkit');
 const Bot = require('./bot/core/Bot');
-// const reminders = require('./bot/reminders');
-// const initReport = require('./bot/initReport');
 const formatPr = require('./scm/formatPr');
 const getFullPr = require('./scm/getFullPr');
 
@@ -45,11 +43,6 @@ const bot = new Bot(slackbot, bbkit, [
   mw.benderSpeech,
 ]);
 
-
-// slackbot.on('start', () => {
-//   initReport(bot);
-// });
-
 slackbot.on('message', (data) => {
   bot.start(data);
 });
@@ -71,14 +64,6 @@ app.post('/hooks', (req, res) => {
 
   res.send();
 });
-
-// app.get('/auth', (req, res) => {
-//   restClient({
-//     handleResponse: call => call.then(r => r.text()),
-//   }).post(`https://bitbucket.org/site/oauth2/authorize?client_id=${process.env.BITBUCKET_KEY}&response_type=code`).then((r) => {
-//     res.send(r);
-//   });
-// });
 
 app.get('*', (req, res) => res.send('Hello'));
 
