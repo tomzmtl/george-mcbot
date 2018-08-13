@@ -25,11 +25,11 @@ const renderIcon = (pr, meta) => {
 
 const renderCollaborators = (pr, meta) => {
   if (pr.reviewers.length && meta.pending && !meta.story) {
-    return `Reviewers: ${pr.reviewers.map(user => mention(user.username)).join(', ')}`;
+    return `> Reviewers: ${pr.reviewers.map(user => mention(user.username)).join(', ')}`;
   }
 
   if (meta.approved || meta.story) {
-    return `Owner: ${mention(pr.author.username)}`;
+    return `> Owner: ${mention(pr.author.username)}`;
   }
 
   return null;
@@ -48,6 +48,7 @@ module.exports = (pr) => {
 
   const msg = [
     `${renderIcon(pr, meta)} *<${pr.links.html.href}|${pr.title}>*`,
+    `> Repo: \`${pr.source.repository.name}\``,
     renderCollaborators(pr, meta),
   ];
 

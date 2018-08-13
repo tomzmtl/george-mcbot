@@ -8,7 +8,7 @@ const bbClient = restClient({
 
 module.exports = {
   pullRequests: {
-    get: id => bbClient.get(`https://api.bitbucket.org/2.0/repositories/goloinc/ordering-web-app/pullrequests/${id}`),
+    get: (id, repo) => bbClient.get(`https://api.bitbucket.org/2.0/repositories/goloinc/${repo}/pullrequests/${id}`),
     getAll: repo =>
       bbClient.get(`https://api.bitbucket.org/2.0/repositories/goloinc/${repo}/pullrequests?q=state="OPEN"`),
   },

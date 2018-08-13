@@ -1,7 +1,7 @@
 module.exports = async (pr, bbkit) => {
-  const getFullPr = id => bbkit.pullRequests.get(id);
+  const getFullPr = () => bbkit.pullRequests.get(pr.id, pr.source.repository.name);
 
-  const fullPr = await getFullPr(pr.id, bbkit);
+  const fullPr = await getFullPr(pr, bbkit);
 
   return fullPr;
 };
