@@ -56,7 +56,7 @@ app.post('/hooks', (req, res) => {
   // eslint-disable-next-line no-console
   console.log('INCOMING WEBHOOK', body);
 
-  if (body.pullrequest && body.pullrequest.state === 'OPEN') {
+  if (body.pullrequest && body.pullrequest.state === 'OPEN' && !body.approval) {
     getFullPr(body.pullrequest, bbkit).then((fullPr) => {
       bot.postToReview(formatPr(fullPr, { prefix: pr => `New PR opened by ${pr.author.display_name}:` }));
     });
