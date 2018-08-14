@@ -54,7 +54,7 @@ app.post('/hooks', (req, res) => {
   // const pr = body.pull_request;
 
   // eslint-disable-next-line no-console
-  console.log('INCOMING WEBHOOK', body.action);
+  console.log('INCOMING WEBHOOK', body);
 
   // if (body.action === 'opened' && pr) {
   //   getFullPr(pr, bbkit).then((fullPr) => {
