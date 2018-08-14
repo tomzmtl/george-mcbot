@@ -35,7 +35,7 @@ const renderCollaborators = (pr, meta) => {
   return null;
 };
 
-module.exports = (pr) => {
+module.exports = (pr, prefix) => {
   const approved = pr.participants.some(user => user.approved);
   const rejected = false; // TODO: wait for bitbucket to allow "request changes" status
 
@@ -46,11 +46,10 @@ module.exports = (pr) => {
     story: false, // TODO: wait for bitbucket to allow labels :facepalm:
   };
 
-  const msg = [
-    `${renderIcon(pr, meta)} *<${pr.links.html.href}|${pr.title}>*`,
-    `> Repo: \`${pr.source.repository.name}\``,
-    renderCollaborators(pr, meta),
-  ];
+  const msg = prefix ? [prefix] : [];
 
-  return buildMessage(msg);
+  return buildMessage(msg.concat([
+    `${renderIcon(pr, meta)} *<${pr.links.html.href}|${pr.title}>* \`[${pr.source.repository.name}\`]`,
+    renderCollaborators(pr, meta),
+  ]));
 };
