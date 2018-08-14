@@ -49,7 +49,7 @@ module.exports = (pr, options = {}) => {
   const msg = options.prefix ? [options.prefix(pr)] : [];
 
   return buildMessage(msg.concat([
-    `${renderIcon(pr, meta)} *<${pr.links.html.href}|${pr.title}>* \`[${pr.source.repository.name}\`]`,
+    `${renderIcon(pr, meta)} *<${pr.links.html.href}|${pr.title}>* \`${pr.source.repository.name}\``,
     renderCollaborators(pr, meta),
   ]));
 };
