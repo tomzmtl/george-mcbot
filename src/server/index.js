@@ -51,16 +51,16 @@ app.use(bodyParser.json());
 
 app.post('/hooks', (req, res) => {
   const { body } = req;
-  const pr = body.pull_request;
+  // const pr = body.pull_request;
 
   // eslint-disable-next-line no-console
-  console.log('INCOMING GITHUB WEBHOOK', body.action);
+  console.log('INCOMING WEBHOOK', body.action);
 
-  if (body.action === 'opened' && pr) {
-    getFullPr(pr, bbkit).then((fullPr) => {
-      bot.postToReview(formatPr(fullPr, { prefix: data => `New PR opened by ${data.user.login}:` }));
-    });
-  }
+  // if (body.action === 'opened' && pr) {
+  //   getFullPr(pr, bbkit).then((fullPr) => {
+  //     bot.postToReview(formatPr(fullPr, { prefix: data => `New PR opened by ${data.user.login}:` }));
+  //   });
+  // }
 
   res.send();
 });
