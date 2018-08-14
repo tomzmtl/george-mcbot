@@ -46,7 +46,7 @@ module.exports = (pr, options = {}) => {
     story: false, // TODO: wait for bitbucket to allow labels :facepalm:
   };
 
-  const msg = options.prefix ? [options.prefix] : [];
+  const msg = options.prefix ? [options.prefix(pr)] : [];
 
   return buildMessage(msg.concat([
     `${renderIcon(pr, meta)} *<${pr.links.html.href}|${pr.title}>* \`[${pr.source.repository.name}\`]`,

@@ -58,7 +58,7 @@ app.post('/hooks', (req, res) => {
 
   if (body.pullrequest && body.pullrequest.state === 'OPEN') {
     getFullPr(body.pullrequest, bbkit).then((fullPr) => {
-      bot.postToReview(formatPr(fullPr, { prefix: data => `New PR opened by ${data.user.login}:` }));
+      bot.postToReview(formatPr(fullPr, { prefix: pr => `New PR opened by ${pr.author.display_name}:` }));
     });
   }
 
