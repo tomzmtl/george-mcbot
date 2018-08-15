@@ -56,13 +56,27 @@ app.post('/hooks', (req, res) => {
   // eslint-disable-next-line no-console
   console.log('INCOMING WEBHOOK', body);
 
-  if (body.pullrequest && body.pullrequest.state === 'OPEN' && !body.approval) {
-    getFullPr(body.pullrequest, bbkit).then((fullPr) => {
-      bot.postToReview(formatPr(fullPr, { prefix: pr => `New PR opened by ${pr.author.display_name}:` }));
-    });
+  if (body.pullrequest) {
+    if (body.approval) {
+      // PR approved
+      return res.send();
+    }
+
+    if (body.comment) {
+      // Comment on PR
+      return res.send();
+    }
+
+    if (body.pullrequest.state === 'OPEN') {
+      getFullPr(body.pullrequest, bbkit).then((fullPr) => {
+        bot.postToReview(formatPr(fullPr, { prefix: pr => `New PR opened by ${pr.author.display_name}:` }));
+      });
+
+      return res.send();
+    }
   }
 
-  res.send();
+  return res.send();
 });
 
 app.get('*', (req, res) => res.send('Hello'));
