@@ -60,7 +60,7 @@ app.post('/hooks', (req, res) => {
     // PR approved
     if (body.approval) {
       getFullPr(body.pullrequest, bbkit).then((fullPr) => {
-        bot.postToReview(formatPr(fullPr, { prefix: pr => `${pr.author.display_name} approved a PR:` }));
+        bot.postToReview(formatPr(fullPr, { prefix: () => `${body.approval.user.display_name} approved a PR:` }));
       });
 
       return res.send();
@@ -69,7 +69,7 @@ app.post('/hooks', (req, res) => {
     // Add PR comment
     if (body.comment) {
       getFullPr(body.pullrequest, bbkit).then((fullPr) => {
-        bot.postToReview(formatPr(fullPr, { prefix: pr => `${pr.author.display_name} added a comment:` }));
+        bot.postToReview(formatPr(fullPr, { prefix: () => `${body.comment.user.display_name} added a comment:` }));
       });
 
       return res.send();
