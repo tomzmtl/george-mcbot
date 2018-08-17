@@ -57,16 +57,25 @@ app.post('/hooks', (req, res) => {
   console.log('INCOMING WEBHOOK', body);
 
   if (body.pullrequest) {
+    // PR approved
     if (body.approval) {
-      // PR approved
+      getFullPr(body.pullrequest, bbkit).then((fullPr) => {
+        bot.postToReview(formatPr(fullPr, { prefix: pr => `${pr.author.display_name} approved a PR:` }));
+      });
+
       return res.send();
     }
 
+    // Add PR comment
     if (body.comment) {
-      // Comment on PR
+      getFullPr(body.pullrequest, bbkit).then((fullPr) => {
+        bot.postToReview(formatPr(fullPr, { prefix: pr => `${pr.author.display_name} added a comment:` }));
+      });
+
       return res.send();
     }
 
+    // New PR
     if (body.pullrequest.state === 'OPEN') {
       getFullPr(body.pullrequest, bbkit).then((fullPr) => {
         bot.postToReview(formatPr(fullPr, { prefix: pr => `New PR opened by ${pr.author.display_name}:` }));
