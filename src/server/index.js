@@ -7,7 +7,7 @@ const makeErrorHandler = require('airbrake-js/dist/instrumentation/express');
 const SlackBot = require('slackbots');
 const reqDir = require('require-dir');
 const mongoose = require('mongoose');
-
+const moment = require('moment');
 const bbkit = require('./bbkit');
 const Bot = require('./bot/core/Bot');
 const formatPr = require('./scm/formatPr');
@@ -75,10 +75,19 @@ app.post('/hooks', (req, res) => {
       return res.send();
     }
 
-    // New PR
+    // Open PR
     if (body.pullrequest.state === 'OPEN') {
+      // New PR
+      if (moment(body.pullrequest.created_on).isSame(moment(body.pullrequest.created_on), 'm')) {
+        getFullPr(body.pullrequest, bbkit).then((fullPr) => {
+          bot.postToReview(formatPr(fullPr, { prefix: pr => `New PR opened by ${pr.author.display_name}:` }));
+        });
+
+        return res.send();
+      }
+
       getFullPr(body.pullrequest, bbkit).then((fullPr) => {
-        bot.postToReview(formatPr(fullPr, { prefix: pr => `New PR opened by ${pr.author.display_name}:` }));
+        bot.postToReview(formatPr(fullPr, { prefix: pr => `${pr.author.display_name} updated a PR:` }));
       });
 
       return res.send();
