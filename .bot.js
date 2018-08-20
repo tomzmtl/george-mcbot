@@ -18,5 +18,10 @@ module.exports = {
       memberId: 'U1RFGPG20',
       scmId: 'jfg-golo',
     },
+    {
+      name: 'Miles',
+      memberId: 'UCC0BG4TX',
+      scmId: 'milesrostami',
+    },
   ],
 };
