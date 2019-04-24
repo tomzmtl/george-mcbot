@@ -34,6 +34,7 @@
     "body-parser": "^1.18.3",
     "chai": "~4.1.2",
     "classnames": "~2.2.5",
+    "cross-fetch": "^3.0.2",
     "css-loader": "~0.28.11",
     "dotenv": "^5.0.1",
     "express": "~4.16.3",
