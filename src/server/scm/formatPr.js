@@ -2,10 +2,10 @@ const { humans } = require('../../../.bot.js');
 const { buildMessage } = require('../bot/helpers');
 
 
-const mention = (login) => {
-  const human = humans.find(h => h.scmId === login);
+const mention = (user) => {
+  const human = humans.find(h => h.scmId === user.uuid);
   if (!human) {
-    return login;
+    return user.display_name;
   }
 
   return `<@${human.memberId}>`;
@@ -25,11 +25,11 @@ const renderIcon = (pr, meta) => {
 
 const renderCollaborators = (pr, meta) => {
   if (pr.reviewers.length && meta.pending && !meta.story) {
-    return `> Reviewers: ${pr.reviewers.map(user => mention(user.username)).join(', ')}`;
+    return `> Reviewers: ${pr.reviewers.map(user => mention(user)).join(', ')}`;
   }
 
   if (meta.approved || meta.story) {
-    return `> Owner: ${mention(pr.author.username)}`;
+    return `> Owner: ${mention(pr.author)}`;
   }
 
   return null;
