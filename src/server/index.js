@@ -54,7 +54,7 @@ app.post('/hooks', (req, res) => {
   // const pr = body.pull_request;
 
   // eslint-disable-next-line no-console
-  console.log('INCOMING WEBHOOK', body);
+  console.log('INCOMING WEBHOOK', body.pullrequest.reviewers);
 
   if (body.pullrequest) {
     // PR approved
