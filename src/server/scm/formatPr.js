@@ -3,9 +3,9 @@ const { buildMessage } = require('../bot/helpers');
 
 
 const mention = (user) => {
-  const human = humans.find(h => h.scmId === `{${user.uuid}}`);
+  const human = humans.find(h => `{${h.scmId}}` === `${user.uuid}`);
   if (!human) {
-    return user.uuid;
+    return user.display_name;
   }
 
   return `<@${human.memberId}>`;
